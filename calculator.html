@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ЛР1 - Приказы ректора МГТУ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header-section">
+      <h2>Портал МГТУ: Система вычислений</h2>
+
+      <p class="goal-text">
+        <strong>Цель:</strong> <mark>знакомство</mark> с инструментами построения пользовательских интерфейсов
+        web-сайтов: <mark>HTML</mark>, <mark>CSS</mark>.
+      </p>
+
+      <details class="student-details">
+        <summary>Информация об авторе</summary>
+        <p>ФИО: Гаранин Ерофей Дмитриевич</p>
+        <p>Группа: ИУ5-42Б</p>
+      </details>
+
+      <div class="portal-services">
+        <label for="services">Раздел портала:</label>
+        <select id="services" class="bmstu-select">
+          <option>Приказы ректора</option>
+          <option>Услуги - подразделения МГТУ для ознакомления с приказом</option>
+          <option>Заявки - приказы ректора</option>
+        </select>
+      </div>
+
+      <button class="theme-btn">Сменить тему</button>
+
+      <a href="https://github.com/ManInTheCoat/Garanin-PNA-Labs-2026/tree/lab1-calculator-html-css" target="_blank"
+        class="github-btn">GitHub проекта</a>
+    </div>
+
+    <div class="calculator">
+      <div id="result" class="result">
+        0
+      </div>
+
+      <div class="buttons">
+
+        <button id="btn_op_clear" class="my-btn secondary">C</button>
+        <button id="btn_op_sign" class="my-btn secondary">+/-</button>
+        <button id="btn_op_percent" class="my-btn secondary">%</button>
+        <button id="btn_op_div" class="my-btn primary">/</button>
+
+        <button id="btn_digit_7" class="my-btn digit">7</button>
+        <button id="btn_digit_8" class="my-btn digit">8</button>
+        <button id="btn_digit_9" class="my-btn digit">9</button>
+        <button id="btn_op_mult" class="my-btn primary">x</button>
+
+        <button id="btn_digit_4" class="my-btn digit">4</button>
+        <button id="btn_digit_5" class="my-btn digit">5</button>
+        <button id="btn_digit_6" class="my-btn digit">6</button>
+        <button id="btn_op_minus" class="my-btn primary">-</button>
+
+        <button id="btn_digit_1" class="my-btn digit">1</button>
+        <button id="btn_digit_2" class="my-btn digit">2</button>
+        <button id="btn_digit_3" class="my-btn digit">3</button>
+        <button id="btn_op_plus" class="my-btn primary">+</button>
+
+        <button id="btn_digit_0" class="my-btn digit zero">0</button>
+        <button id="btn_digit_dot" class="my-btn digit">.</button>
+        <button id="btn_op_equal" class="my-btn primary">=</button>
+      </div>
+    </div>
+
+    <div class="footer-text">
+      ЛР выполнена Гараниным Ерофеем Дмитриевичем
+    </div>
+  </div>
+</body>
+
+</html>
