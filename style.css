@@ -11,12 +11,6 @@ body {
   transition: background-color 0.3s ease;
 }
 
-body.light-theme {
-  background-color: #555878;
-  color: #000000;
-  background-blend-mode: screen;
-}
-
 .container {
   max-width: 600px;
   margin: 0 auto;
@@ -25,10 +19,6 @@ body.light-theme {
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   border-top: 5px solid #005bb5;
-}
-
-body.light-theme .container {
-  background: #fffffff2;
 }
 
 .header-section {
@@ -50,10 +40,6 @@ mark {
   margin: 10px 0;
   border-left: 4px solid #005bb5;
   cursor: pointer;
-}
-
-body.light-theme .student-details {
-  background: #e6f0fa;
 }
 
 .bmstu-select {
@@ -126,17 +112,13 @@ body.light-theme .student-details {
   background: #3a506b;
 }
 
-.my-btn.zero {
-  grid-column: span 2;
-}
-
-/* hover - это состояние элемента, когда на него наведен курсор */
+/* состояние элемента, когда на него наведен курсор */
 .my-btn:hover {
   background: #64ffda;
   color: #0a192f;
 }
 
-/* active - это состояние активации элемента. В случае кнопки - нажатие на нее */
+/* состояние активации элемента. В случае кнопки - нажатие на нее */
 .my-btn:active {
   filter: brightness(80%);
 }
@@ -154,6 +136,13 @@ body.light-theme .student-details {
   color: #64ffda;
   font-size: 2.5rem;
   font-family: 'Courier New', Courier, monospace;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+/* Управление ползунком скролла */
+.result::-webkit-scrollbar {
+  display: none;
 }
 
 .footer-text {
