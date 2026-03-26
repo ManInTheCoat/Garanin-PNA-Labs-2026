@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ЛР2 - Калькулятор</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="script.js"></script>
+</head>
+
+<body>
+  <nav class="top-nav">
+    <a href="index.html">Цель</a>
+    <a href="author.html">Об авторе</a>
+    <a href="portal.html">Раздел портала</a>
+    <a href="calc.html" class="active">Калькулятор</a>
+    <button class="theme-btn">Сменить тему</button>
+  </nav>
+
+  <div class="container">
+    <div class="calc-layout">
+      <div class="calculator">
+        <div id="result" class="result">0</div>
+
+        <div class="buttons">
+          <button id="btn_op_sign" class="my-btn secondary">+/-</button>
+          <button id="btn_op_percent" class="my-btn secondary">%</button>
+          <button id="btn_op_inv" class="my-btn secondary">1/x</button>
+          <button id="btn_op_backspace" class="my-btn secondary">&larr;</button>
+
+          <button id="btn_op_sqrt" class="my-btn secondary">√</button>
+          <button id="btn_op_square" class="my-btn secondary">x²</button>
+          <button id="btn_op_fact" class="my-btn secondary">x!</button>
+          <button id="btn_op_clear" class="my-btn secondary">C</button>
+
+          <button id="btn_digit_7" class="my-btn digit">7</button>
+          <button id="btn_digit_8" class="my-btn digit">8</button>
+          <button id="btn_digit_9" class="my-btn digit">9</button>
+          <button id="btn_op_div" class="my-btn primary">/</button>
+
+          <button id="btn_digit_4" class="my-btn digit">4</button>
+          <button id="btn_digit_5" class="my-btn digit">5</button>
+          <button id="btn_digit_6" class="my-btn digit">6</button>
+          <button id="btn_op_mult" class="my-btn primary">x</button>
+
+          <button id="btn_digit_1" class="my-btn digit">1</button>
+          <button id="btn_digit_2" class="my-btn digit">2</button>
+          <button id="btn_digit_3" class="my-btn digit">3</button>
+          <button id="btn_op_minus" class="my-btn primary">-</button>
+
+          <button id="btn_digit_0" class="my-btn digit">0</button>
+          <button id="btn_digit_dot" class="my-btn digit">.</button>
+          <button id="btn_digit_000" class="my-btn digit">000</button>
+          <button id="btn_op_plus" class="my-btn primary">+</button>
+
+          <button id="btn_color_res" class="my-btn secondary">Цвет</button>
+          <button id="btn_op_equal" class="my-btn primary">=</button>
+        </div>
+      </div>
+
+      <div class="history-panel">
+        <h3>История операций</h3>
+        <ul id="history-list">
+          <li class="empty-history">История пока пуста...</li>
+        </ul>
+        <button id="btn_clear_history" class="history-btn">Очистить историю</button>
+      </div>
+    </div>
+
+    <div class="footer-text">
+      ЛР выполнена Гараниным Ерофеем Дмитриевичем
+    </div>
+  </div>
+</body>
+
+</html>
