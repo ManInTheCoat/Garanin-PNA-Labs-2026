@@ -11,12 +11,6 @@ body {
   transition: background-color 0.3s ease;
 }
 
-body.light-theme {
-  background-color: #555878;
-  color: #000000;
-  background-blend-mode: screen;
-}
-
 .container {
   max-width: 600px;
   margin: 0 auto;
@@ -25,10 +19,6 @@ body.light-theme {
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   border-top: 5px solid #005bb5;
-}
-
-body.light-theme .container {
-  background: #fffffff2;
 }
 
 .header-section {
@@ -50,10 +40,6 @@ mark {
   margin: 10px 0;
   border-left: 4px solid #005bb5;
   cursor: pointer;
-}
-
-body.light-theme .student-details {
-  background: #e6f0fa;
 }
 
 .bmstu-select {
@@ -89,7 +75,7 @@ body.light-theme .student-details {
   border-radius: 5px;
   width: 300px;
   margin: 0 auto;
-  border: 1px solid #233554
+  border: 1px solid #233554;
 }
 
 .buttons {
