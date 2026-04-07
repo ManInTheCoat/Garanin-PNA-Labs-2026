@@ -1,62 +1,91 @@
-import {ProductPage} from "../product/index.js"
-import {ProductCardComponent} from "../../components/product-card/index.js";
+import { HeaderComponent } from "../../components/header/index.js";
+import { OrderCardComponent } from "../../components/order-card/index.js";
+import { OrderPage } from "../order/index.js";
+import { ordersData, addOrder, deleteOrder } from "../../modules/mockData.js";
 
 export class MainPage {
   constructor(parent) {
     this.parent = parent;
+    this.filterValue = "";
   }
 
   get pageRoot() {
-    return document.getElementById('main-page')
+    return document.getElementById('main-page');
+  }
+
+  get cardsRoot() {
+    return document.getElementById('cards-container');
   }
 
   getHTML() {
-    return (
-      `
-        <div id="main-page" class="d-flex flex-wrap"><div/>
-      `
-    )
+    return `
+            <div id="main-page" class="container-fluid p-0">
+              <div id="header-container"></div>
+              <div class="container mt-3">
+                <div class="row mb-4">
+                  <div class="col-md-8">
+                    <input type="text" id="filter-input" class="form-control" placeholder="Фильтр по названию или подразделению..." value="${this.filterValue}">
+                  </div>
+                  <div class="col-md-4 text-end">
+                    <button id="add-order-btn" class="btn btn-success w-100">Добавить приказ</button>
+                  </div>
+                </div>
+                <div id="cards-container" class="row row-cols-1 row-cols-md-3 g-4 justify-content-start"></div>
+              </div>
+            </div>
+          `;
   }
 
-  getData() {
-    return [
-      {
-        id: 1,
-        src: "https://i.pinimg.com/originals/c9/ea/65/c9ea654eb3a7398b1f702c758c1c4206.jpg",
-        title: "Акция",
-        text: "Такой акции вы еще не видели 1"
-      },
-      {
-        id: 2,
-        src: "https://i.pinimg.com/originals/c9/ea/65/c9ea654eb3a7398b1f702c758c1c4206.jpg",
-        title: "Акция",
-        text: "Такой акции вы еще не видели 2"
-      },
-      {
-        id: 3,
-        src: "https://i.pinimg.com/originals/c9/ea/65/c9ea654eb3a7398b1f702c758c1c4206.jpg",
-        title: "Акция",
-        text: "Такой акции вы еще не видели 3"
-      },
-    ]
+  clickDetails(e) {
+    const cardId = e.target.dataset.id;
+    const orderPage = new OrderPage(this.parent, cardId);
+    orderPage.render();
   }
 
-  clickCard(e) {
-    const cardId = e.target.dataset.id
+  clickDelete(e) {
+    const cardId = parseInt(e.target.dataset.id);
+    deleteOrder(cardId);
+    this.render();
+  }
 
-    const productPage = new ProductPage(this.parent, cardId)
-    productPage.render()
+  clickAdd() {
+    addOrder();
+    this.render();
+  }
+
+  onFilterInput(e) {
+    this.filterValue = e.target.value;
+    this.renderCards();
+  }
+
+  renderCards() {
+    const container = this.cardsRoot;
+    container.innerHTML = '';
+
+    const filteredData = ordersData.filter(order =>
+      order.title.toLowerCase().includes(this.filterValue.toLowerCase()) ||
+      order.department.toLowerCase().includes(this.filterValue.toLowerCase())
+    );
+
+    filteredData.forEach((item) => {
+      const orderCard = new OrderCardComponent(container);
+      orderCard.render(item, this.clickDetails.bind(this), this.clickDelete.bind(this));
+    });
   }
 
   render() {
-    this.parent.innerHTML = ''
-    const html = this.getHTML()
-    this.parent.insertAdjacentHTML('beforeend', html)
+    this.parent.innerHTML = '';
+    this.parent.insertAdjacentHTML('beforeend', this.getHTML());
 
-    const data = this.getData()
-    data.forEach((item) => {
-      const productCard = new ProductCardComponent(this.pageRoot)
-      productCard.render(item, this.clickCard.bind(this))
-    })
+    const headerContainer = document.getElementById('header-container');
+    const header = new HeaderComponent(headerContainer);
+    header.render(() => this.render());
+
+    document.getElementById('add-order-btn').addEventListener('click', this.clickAdd.bind(this));
+
+    const filterInput = document.getElementById('filter-input');
+    filterInput.addEventListener('input', this.onFilterInput.bind(this));
+
+    this.renderCards();
   }
 }
