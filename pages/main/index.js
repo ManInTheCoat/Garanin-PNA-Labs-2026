@@ -2,6 +2,7 @@ import { HeaderComponent } from "../../components/header/index.js";
 import { OrderCardComponent } from "../../components/order-card/index.js";
 import { OrderPage } from "../order/index.js";
 import { ordersData, addOrder, deleteOrder } from "../../modules/mockData.js";
+import { MainBannerComponent } from "../../components/main-banner/index.js";
 
 export class MainPage {
   constructor(parent) {
@@ -21,6 +22,9 @@ export class MainPage {
     return `
             <div id="main-page" class="container-fluid p-0">
               <div id="header-container"></div>
+
+              <div id="main-banner-container"></div>
+
               <div class="container mt-3">
                 <div class="row mb-4">
                   <div class="col-md-8">
@@ -80,6 +84,10 @@ export class MainPage {
     const headerContainer = document.getElementById('header-container');
     const header = new HeaderComponent(headerContainer);
     header.render(() => this.render());
+
+    const bannerContainer = document.getElementById('main-banner-container');
+    const mainBanner = new MainBannerComponent(bannerContainer);
+    mainBanner.render(ordersData, this.clickDetails.bind(this));
 
     document.getElementById('add-order-btn').addEventListener('click', this.clickAdd.bind(this));
 
