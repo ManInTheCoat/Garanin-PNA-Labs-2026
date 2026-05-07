@@ -1,10 +1,10 @@
 export class OrderDetailsComponent {
-  constructor(parent) {
-    this.parent = parent;
-  }
+    constructor(parent) {
+        this.parent = parent;
+    }
 
-  getHTML(data) {
-    return `
+    getHTML(data) {
+        return `
             <div class="container mt-4">
               <div class="card border-primary">
                 <div class="card-header bg-primary text-white text-center h4">
@@ -25,9 +25,9 @@ export class OrderDetailsComponent {
               </div>
             </div>
           `;
-  }
+    }
 
-  render(data) {
-    this.parent.insertAdjacentHTML('beforeend', this.getHTML(data));
-  }
+    render(data) {
+        this.parent.insertAdjacentHTML('beforeend', this.getHTML(data));
+    }
 }

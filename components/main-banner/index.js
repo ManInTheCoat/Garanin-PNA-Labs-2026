@@ -1,11 +1,11 @@
 export class MainBannerComponent {
-  constructor(parent) {
-    this.parent = parent;
-  }
+    constructor(parent) {
+        this.parent = parent;
+    }
 
-  getHTML(data) {
-    if (!data || data.length === 0) {
-      return `
+    getHTML(data) {
+        if (!data || data.length === 0) {
+            return `
               <div class="container mt-5 mb-5">
                 <div class="row">
                   <div class="col-md-6 pe-md-5 d-flex flex-column justify-content-center">
@@ -16,13 +16,13 @@ export class MainBannerComponent {
               </div>
               <hr class="mb-5">
             `;
-    }
+        }
 
-    const totalStr = data.length < 10 ? `0${data.length}` : data.length;
+        const totalStr = data.length < 10 ? `0${data.length}` : data.length;
 
-    const slides = data.map((order, index) => {
-      const isActive = index === 0 ? 'active' : '';
-      return `
+        const slides = data.map((order, index) => {
+            const isActive = index === 0 ? 'active' : '';
+            return `
               <div class="carousel-item ${isActive}">
                 <h5 class="text-primary fw-bold mb-2">Приказ № ${order.docNumber}</h5>
                 <h2 class="fw-bold mb-4 text-dark">${order.title}</h2>
@@ -35,9 +35,9 @@ export class MainBannerComponent {
                 </div>
               </div>
             `;
-    }).join('');
+        }).join('');
 
-    return `
+        return `
             <div class="container mt-5 mb-5">
               <div class="row">
                 <div class="col-md-6 pe-md-5 d-flex flex-column justify-content-center">
@@ -66,34 +66,34 @@ export class MainBannerComponent {
             </div>
             <hr class="mb-5">
         `;
-  }
-
-  addListeners(data, detailsListener) {
-    if (!data || data.length === 0) return;
-
-    data.forEach(order => {
-      const btn = document.getElementById(`banner-btn-${order.id}`);
-      if (btn && detailsListener) {
-        btn.addEventListener('click', detailsListener);
-      }
-    });
-
-    const carouselElement = document.getElementById('ordersCarousel');
-    const counterElement = document.getElementById('carousel-counter');
-
-    if (carouselElement && counterElement) {
-      const totalStr = data.length < 10 ? `0${data.length}` : data.length;
-
-      carouselElement.addEventListener('slide.bs.carousel', event => {
-        const current = event.to + 1;
-        const currentStr = current < 10 ? `0${current}` : current;
-        counterElement.innerHTML = `${currentStr} — ${totalStr}`;
-      });
     }
-  }
 
-  render(data, detailsListener) {
-    this.parent.insertAdjacentHTML('beforeend', this.getHTML(data));
-    this.addListeners(data, detailsListener);
-  }
+    addListeners(data, detailsListener) {
+        if (!data || data.length === 0) return;
+
+        data.forEach(order => {
+            const btn = document.getElementById(`banner-btn-${order.id}`);
+            if (btn && detailsListener) {
+                btn.addEventListener('click', detailsListener);
+            }
+        });
+
+        const carouselElement = document.getElementById('ordersCarousel');
+        const counterElement = document.getElementById('carousel-counter');
+
+        if (carouselElement && counterElement) {
+            const totalStr = data.length < 10 ? `0${data.length}` : data.length;
+
+            carouselElement.addEventListener('slide.bs.carousel', event => {
+                const current = event.to + 1;
+                const currentStr = current < 10 ? `0${current}` : current;
+                counterElement.innerHTML = `${currentStr} — ${totalStr}`;
+            });
+        }
+    }
+
+    render(data, detailsListener) {
+        this.parent.insertAdjacentHTML('beforeend', this.getHTML(data));
+        this.addListeners(data, detailsListener);
+    }
 }

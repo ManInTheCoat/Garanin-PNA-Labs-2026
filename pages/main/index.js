@@ -2,7 +2,8 @@ import { HeaderComponent } from "../../components/header/index.js";
 import { OrderCardComponent } from "../../components/order-card/index.js";
 import { OrderPage } from "../order/index.js";
 import { MainBannerComponent } from "../../components/main-banner/index.js";
-import { ordersData, addOrder, deleteOrder, getUnprocessedOrders, inverseOrders } from "../../modules/mockData.js";
+import { ajax } from "../../modules/ajax.js"
+import { orderUrls } from "../../modules/orderUrls.js"
 
 export class MainPage {
     constructor(parent) {
@@ -29,11 +30,7 @@ export class MainPage {
 
                     <div class="row mb-4 align-items-center">
                         <div class="col-md-5 mb-2 mb-md-0">
-                            <input type="text" id="filter-input" class="form-control" placeholder="Фильтр по названию или подразделению..." value="${this.filterValue}">
-                        </div>
-                        <div class="col-md-4 mb-2 mb-md-0 d-flex gap-2">
-                            <button id="btn-homework-2-4" class="btn btn-outline-warning w-50" title="Задание 2.4">ДЗ 2.4</button>
-                            <button id="btn-homework-3-2" class="btn btn-outline-info w-50" title="Задание 3.2">ДЗ 3.2</button>
+                            <input type="text" id="filter-input" class="form-control" placeholder="Фильтр по названию..." value="${this.filterValue}">
                         </div>
                         <div class="col-md-3 text-end">
                             <button id="add-order-btn" class="btn btn-success w-100">Добавить приказ</button>
@@ -47,6 +44,35 @@ export class MainPage {
         `;
     }
 
+    getData() {
+        let url = orderUrls.getOrders();
+        if (this.filterValue) {
+            url += `?title=${encodeURIComponent(this.filterValue)}`;
+        }
+
+        ajax.get(url, (data) => {
+            if (data) {
+                this.renderData(data);
+            }
+        });
+    }
+
+    renderData(items) {
+        const bannerContainer = document.getElementById('main-banner-container');
+        if (bannerContainer) {
+            bannerContainer.innerHTML = '';
+            const mainBanner = new MainBannerComponent(bannerContainer);
+            mainBanner.render(items, this.clickDetails.bind(this));
+        }
+
+        const container = this.cardsRoot;
+        container.innerHTML = '';
+        items.forEach((item) => {
+            const orderCard = new OrderCardComponent(container);
+            orderCard.render(item, this.clickDetails.bind(this), this.clickDelete.bind(this));
+        });
+    }
+
     clickDetails(e) {
         const cardId = e.target.dataset.id;
         const orderPage = new OrderPage(this.parent, cardId);
@@ -54,60 +80,38 @@ export class MainPage {
     }
 
     clickDelete(e) {
-        const cardId = parseInt(e.target.dataset.id);
-        deleteOrder(cardId);
-        this.render();
+        const cardId = e.target.dataset.id;
+        if (confirm('Вы уверены, что хотите удалить приказ?')) {
+            ajax.delete(orderUrls.removeOrderById(cardId), (data, status) => {
+                if (status === 204 || status === 200) {
+                    this.getData();
+                }
+            });
+        }
     }
 
     clickAdd() {
-        addOrder();
-        this.render();
-    }
+        const newOrderData = {
+            docNumber: "Новый-№",
+            date: new Date().toISOString().split('T')[0],
+            department: "ИУ",
+            title: "Копия приказа",
+            content: "Текст нового приказа...",
+            status: "Активен"
+        };
 
-    clickHomework() {
-        const processedOrders = [ordersData[0]];
-
-        const newOrders = getUnprocessedOrders(ordersData, processedOrders);
-
-        const container = this.cardsRoot;
-        container.innerHTML = '';
-
-        newOrders.forEach((item) => {
-            const orderCard = new OrderCardComponent(container);
-            orderCard.render(item, this.clickDetails.bind(this), this.clickDelete.bind(this));
-        });
-    }
-
-    clickInverse() {
-        const reversedOrders = inverseOrders(ordersData, 1);
-
-        const container = this.cardsRoot;
-        container.innerHTML = '';
-
-        reversedOrders.forEach((item) => {
-            const orderCard = new OrderCardComponent(container);
-            orderCard.render(item, this.clickDetails.bind(this), this.clickDelete.bind(this));
+        ajax.post(orderUrls.createOrder(), newOrderData, (data, status) => {
+            if (status === 200 || status === 201) {
+                this.getData();
+            } else {
+                console.error("Ошибка при добавлении, сервер вернул статус:", status);
+            }
         });
     }
 
     onFilterInput(e) {
         this.filterValue = e.target.value;
-        this.renderCards();
-    }
-
-    renderCards() {
-        const container = this.cardsRoot;
-        container.innerHTML = '';
-
-        const filteredData = ordersData.filter(order =>
-            order.title.toLowerCase().includes(this.filterValue.toLowerCase()) ||
-            order.department.toLowerCase().includes(this.filterValue.toLowerCase())
-        );
-
-        filteredData.forEach((item) => {
-            const orderCard = new OrderCardComponent(container);
-            orderCard.render(item, this.clickDetails.bind(this), this.clickDelete.bind(this));
-        });
+        this.getData();
     }
 
     render() {
@@ -118,19 +122,11 @@ export class MainPage {
         const header = new HeaderComponent(headerContainer);
         header.render(() => this.render());
 
-        const bannerContainer = document.getElementById('main-banner-container');
-        const mainBanner = new MainBannerComponent(bannerContainer);
-        mainBanner.render(ordersData, this.clickDetails.bind(this));
-
         document.getElementById('add-order-btn').addEventListener('click', this.clickAdd.bind(this));
-
-        document.getElementById('btn-homework-2-4').addEventListener('click', this.clickHomework.bind(this));
-
-        document.getElementById('btn-homework-3-2').addEventListener('click', this.clickInverse.bind(this));
 
         const filterInput = document.getElementById('filter-input');
         filterInput.addEventListener('input', this.onFilterInput.bind(this));
 
-        this.renderCards();
+        this.getData();
     }
 }

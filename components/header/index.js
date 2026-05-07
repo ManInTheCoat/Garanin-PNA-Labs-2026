@@ -1,14 +1,14 @@
 export class HeaderComponent {
-  constructor(parent) {
-    this.parent = parent;
-  }
+    constructor(parent) {
+        this.parent = parent;
+    }
 
-  addListeners(listener) {
-    document.getElementById("home-button").addEventListener("click", listener);
-  }
+    addListeners(listener) {
+        document.getElementById("home-button").addEventListener("click", listener);
+    }
 
-  getHTML() {
-    return `
+    getHTML() {
+        return `
             <nav class="navbar navbar-dark bg-dark mb-4">
               <div class="container-fluid">
                 <span class="navbar-brand mb-0 h1">МГТУ им. Н.Э. Баумана | Документооборот</span>
@@ -16,10 +16,10 @@ export class HeaderComponent {
               </div>
             </nav>
           `;
-  }
+    }
 
-  render(listener) {
-    this.parent.insertAdjacentHTML('beforeend', this.getHTML());
-    this.addListeners(listener);
-  }
+    render(listener) {
+        this.parent.insertAdjacentHTML('beforeend', this.getHTML());
+        this.addListeners(listener);
+    }
 }

@@ -1,20 +1,20 @@
 export class OrderCardComponent {
-  constructor(parent) {
-    this.parent = parent;
-  }
+    constructor(parent) {
+        this.parent = parent;
+    }
 
-  addListeners(data, detailsListener, deleteListener) {
-    document
-      .getElementById(`details-btn-${data.id}`)
-      .addEventListener("click", detailsListener);
+    addListeners(data, detailsListener, deleteListener) {
+        document
+            .getElementById(`details-btn-${data.id}`)
+            .addEventListener("click", detailsListener);
 
-    document
-      .getElementById(`delete-btn-${data.id}`)
-      .addEventListener("click", deleteListener);
-  }
+        document
+            .getElementById(`delete-btn-${data.id}`)
+            .addEventListener("click", deleteListener);
+    }
 
-  getHTML(data) {
-    return `
+    getHTML(data) {
+        return `
             <div class="col">
               <div class="card h-100 shadow-sm">
                 <div class="card-header bg-primary text-white">
@@ -32,10 +32,10 @@ export class OrderCardComponent {
               </div>
             </div>
           `;
-  }
+    }
 
-  render(data, detailsListener, deleteListener) {
-    this.parent.insertAdjacentHTML('beforeend', this.getHTML(data));
-    this.addListeners(data, detailsListener, deleteListener);
-  }
+    render(data, detailsListener, deleteListener) {
+        this.parent.insertAdjacentHTML('beforeend', this.getHTML(data));
+        this.addListeners(data, detailsListener, deleteListener);
+    }
 }
