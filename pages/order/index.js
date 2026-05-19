@@ -4,6 +4,10 @@ import { MainPage } from "../main/index.js";
 import { ajax } from "../../modules/ajax.js";
 import { orderUrls } from "../../modules/orderUrls.js";
 
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
 export class OrderPage {
     constructor(parent, id) {
         this.parent = parent;
@@ -25,36 +29,47 @@ export class OrderPage {
                             <div id="details-container"></div>
                         </div>
 
-                        <div class="col-md-5" id="edit-form-container" style="display: none;">
-                            <div class="card shadow-sm">
-                                <div class="card-body">
-                                    <h4 class="card-title mb-4">Редактировать приказ</h4>
-                                    <form id="edit-order-form">
-                                        <div class="mb-3">
-                                            <label for="edit-docNumber" class="form-label text-muted small mb-1">Номер приказа</label>
-                                            <input type="text" class="form-control" id="edit-docNumber" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="edit-title" class="form-label text-muted small mb-1">Название приказа</label>
-                                            <input type="text" class="form-control" id="edit-title" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="edit-department" class="form-label text-muted small mb-1">Подразделение</label>
-                                            <input type="text" class="form-control" id="edit-department" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="edit-status" class="form-label text-muted small mb-1">Статус</label>
-                                            <select class="form-select" id="edit-status">
-                                                <option value="Активен">Активен</option>
-                                                <option value="Архив">Архив</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="edit-content" class="form-label text-muted small mb-1">Текст приказа</label>
-                                            <textarea class="form-control" id="edit-content" rows="5" required></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100">Сохранить изменения</button>
-                                    </form>
+                        <div class="col-md-5">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 text-muted">Визуализация</h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div id="3d-container" style="height: 300px; width: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; overflow: hidden; cursor: grab;"></div>
+                                </div>
+                            </div>
+
+                            <div id="edit-form-container" style="display: none;">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-4">Редактировать приказ</h4>
+                                        <form id="edit-order-form">
+                                            <div class="mb-3">
+                                                <label for="edit-docNumber" class="form-label text-muted small mb-1">Номер приказа</label>
+                                                <input type="text" class="form-control" id="edit-docNumber" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-title" class="form-label text-muted small mb-1">Название приказа</label>
+                                                <input type="text" class="form-control" id="edit-title" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-department" class="form-label text-muted small mb-1">Подразделение</label>
+                                                <input type="text" class="form-control" id="edit-department" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-status" class="form-label text-muted small mb-1">Статус</label>
+                                                <select class="form-select" id="edit-status">
+                                                    <option value="Активен">Активен</option>
+                                                    <option value="Архив">Архив</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-content" class="form-label text-muted small mb-1">Текст приказа</label>
+                                                <textarea class="form-control" id="edit-content" rows="5" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Сохранить изменения</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -121,6 +136,67 @@ export class OrderPage {
         }
     }
 
+    init3DModel() {
+        const container = document.getElementById('3d-container');
+        if (!container) return;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#f8f9fa');
+
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(0, 2, 6);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 10, 7);
+        scene.add(directionalLight);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        const loader = new GLTFLoader();
+
+        loader.load('/public/models/document.glb', (gltf) => {
+            const model = gltf.scene;
+
+            model.scale.set(20, 20, 20);
+
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.x += (model.position.x - center.x);
+            model.position.y += (model.position.y - center.y);
+            model.position.z += (model.position.z - center.z);
+
+            scene.add(model);
+        }, undefined, (error) => {
+            console.error('Ошибка при загрузке 3D модели:', error);
+            container.innerHTML = '<div class="d-flex h-100 justify-content-center align-items-center text-muted">Не удалось загрузить модель. Проверьте путь public/models/document.glb</div>';
+        });
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        };
+        animate();
+
+        window.addEventListener('resize', () => {
+            if (container) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        });
+    }
+
     render() {
         this.parent.innerHTML = '';
         this.parent.insertAdjacentHTML('beforeend', this.getHTML());
@@ -133,6 +209,8 @@ export class OrderPage {
         if (editForm) {
             editForm.addEventListener('submit', this.submitUpdate.bind(this));
         }
+
+        this.init3DModel();
 
         this.getData();
     }
