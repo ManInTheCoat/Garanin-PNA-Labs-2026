@@ -69,14 +69,14 @@ export class OrderPage {
         mainPage.render();
     }
 
-    getData() {
-        ajax.get(orderUrls.getOrderById(this.id), (data, status) => {
-            if (status === 200 && data) {
-                this.renderData(data);
-            } else {
-                this.renderError();
-            }
-        });
+    async getData() {
+        const { data, status } = await ajax.get(orderUrls.getOrderById(this.id));
+
+        if (status === 200 && data) {
+            this.renderData(data);
+        } else {
+            this.renderError();
+        }
     }
 
     renderData(item) {
@@ -101,7 +101,7 @@ export class OrderPage {
         document.getElementById('edit-form-container').style.display = 'none';
     }
 
-    submitUpdate(e) {
+    async submitUpdate(e) {
         e.preventDefault();
 
         const updateData = {
@@ -112,13 +112,13 @@ export class OrderPage {
             content: document.getElementById('edit-content').value
         };
 
-        ajax.patch(orderUrls.updateOrderById(this.id), updateData, (data, status) => {
-            if (status === 200) {
-                this.getData();
-            } else {
-                alert('Произошла ошибка при сохранении изменений на сервере.');
-            }
-        });
+        const { status } = await ajax.patch(orderUrls.updateOrderById(this.id), updateData);
+
+        if (status === 200) {
+            this.getData();
+        } else {
+            alert('Произошла ошибка при сохранении изменений на сервере.');
+        }
     }
 
     render() {

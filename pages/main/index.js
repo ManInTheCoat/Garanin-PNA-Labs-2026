@@ -44,17 +44,17 @@ export class MainPage {
         `;
     }
 
-    getData() {
+    async getData() {
         let url = orderUrls.getOrders();
         if (this.filterValue) {
             url += `?title=${encodeURIComponent(this.filterValue)}`;
         }
 
-        ajax.get(url, (data) => {
-            if (data) {
-                this.renderData(data);
-            }
-        });
+        const { data, status } = await ajax.get(url);
+
+        if (status === 200 && data) {
+            this.renderData(data);
+        }
     }
 
     renderData(items) {
@@ -79,18 +79,18 @@ export class MainPage {
         orderPage.render();
     }
 
-    clickDelete(e) {
+    async clickDelete(e) {
         const cardId = e.target.dataset.id;
         if (confirm('Вы уверены, что хотите удалить приказ?')) {
-            ajax.delete(orderUrls.removeOrderById(cardId), (data, status) => {
-                if (status === 204 || status === 200) {
-                    this.getData();
-                }
-            });
+            const { status } = await ajax.delete(orderUrls.removeOrderById(cardId));
+
+            if (status === 204 || status === 200) {
+                this.getData();
+            }
         }
     }
 
-    clickAdd() {
+    async clickAdd() {
         const newOrderData = {
             docNumber: "Новый-№",
             date: new Date().toISOString().split('T')[0],
@@ -100,13 +100,13 @@ export class MainPage {
             status: "Активен"
         };
 
-        ajax.post(orderUrls.createOrder(), newOrderData, (data, status) => {
-            if (status === 200 || status === 201) {
-                this.getData();
-            } else {
-                console.error("Ошибка при добавлении, сервер вернул статус:", status);
-            }
-        });
+        const { status } = await ajax.post(orderUrls.createOrder(), newOrderData);
+
+        if (status === 200 || status === 201) {
+            this.getData();
+        } else {
+            console.error("Ошибка при добавлении, сервер вернул статус:", status);
+        }
     }
 
     onFilterInput(e) {
